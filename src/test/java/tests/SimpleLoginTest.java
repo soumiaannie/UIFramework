@@ -1,15 +1,11 @@
 package tests;
 
-
-
 import org.openqa.selenium.By;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.annotations.AfterTest;
-import org.testng.annotations.BeforeTest;
+import org.openqa.selenium.WebDriver;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
+import pages.LoginPage;
 import tests.utilities.BaseClass;
-
-import java.util.concurrent.TimeUnit;
 
 import static org.testng.Assert.assertTrue;
 
@@ -17,22 +13,17 @@ import static org.testng.Assert.assertTrue;
 public class SimpleLoginTest extends BaseClass {
 
 
-    @Test
+    @Test(groups="smoke")
+    @Parameters("url")
     public void testLogin(){
 
-
-
-        driver.navigate().to("https://spree-vapasi.herokuapp.com");
-        driver.findElement(By.id("link-to-login")).click();
-        driver.findElement(By.id("spree_user_email")).sendKeys("spree@example.com");
-        driver.findElement(By.id("spree_user_password")).sendKeys("spree123");
-        driver.findElement(By.name("commit")).click();
-        assertTrue(driver.findElement(By.linkText("My Account")).isDisplayed());
-
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.login("spree@example.com", "spree123");
+        assertTrue(loginPage.isMy_account());
 
     }
 
-    @Test
+    @Test(groups="smoke")
     public void newTest()
     {
         System.out.println("SecondTEst");
