@@ -3,6 +3,7 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.DataProvider;
 
 public class ProductListingPage {
 
@@ -18,6 +19,9 @@ public class ProductListingPage {
         driver.findElement(By.linkText(productName)).click();
         return new ProductDetailsPage(driver);
     }
+
+
+
 
 
 }

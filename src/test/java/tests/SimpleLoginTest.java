@@ -27,8 +27,7 @@ public class SimpleLoginTest extends BaseClass {
     public void newTest()
     {
         System.out.println("SecondTEst");
+
     }
-
-
 
 }

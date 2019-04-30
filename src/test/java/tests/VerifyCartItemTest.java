@@ -2,6 +2,7 @@ package tests;
 
 import com.google.gson.Gson;
 import org.openqa.selenium.WebElement;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import pages.*;
@@ -16,34 +17,44 @@ import static org.testng.Assert.assertEquals;
 
     public class VerifyCartItemTest extends BaseClass {
 
-        @Test(groups="smoke")
+        //@Test(groups="smoke")
+        @Test(dataProvider = "getProductName", groups = "smoke")
         @Parameters("url")
-        public void verifyCartItemTest(){
+        public void verifyCartItemTest(String productName, String productQuantity) {
 
-            ArrayList<CartDetails> expectedCartDetails= new ArrayList<CartDetails>();
-            expectedCartDetails.add(0, new CartDetails("Ruby on Rails Bag", "2"));
+            ArrayList<CartDetails> expectedCartDetails = new ArrayList<CartDetails>();
+            expectedCartDetails.add(0, new CartDetails(productName, productQuantity));
 
-            LoginPage loginPage=new LoginPage(driver);
+            LoginPage loginPage = new LoginPage(driver);
 
-            String productQuantity="2";
+            //String productQuantity = "2";
 
-            ProductListingPage productListing= loginPage.login("spree@example.com", "spree123");
+            ProductListingPage productListing = loginPage.login("spree@example.com", "spree123");
 
-            ProductDetailsPage productDetails=productListing.selectProduct("Ruby on Rails Bag");
+            ProductDetailsPage productDetails = productListing.selectProduct(productName);
             productDetails.selectQuantity(productQuantity);
-            ShoppingCartPage shoppingCart=productDetails.addToCart();
+            ShoppingCartPage shoppingCart = productDetails.addToCart();
 
             List<WebElement> items = shoppingCart.getCartElements();
 
             assertEquals(items.size(), 1);
 
             //Printing out the product names from the cart
-            ArrayList<CartDetails> actualCartDetails=shoppingCart.displayCartItems(items);
-            String actualCartDetailsString=new Gson().toJson(actualCartDetails);
-            String expectedCartDetailsString=new Gson().toJson(expectedCartDetails);
+            ArrayList<CartDetails> actualCartDetails = shoppingCart.displayCartItems(items);
+            String actualCartDetailsString = new Gson().toJson(actualCartDetails);
+            String expectedCartDetailsString = new Gson().toJson(expectedCartDetails);
             //assertEquals(actualCartDetailsString,expectedCartDetailsString);
             assertEquals(actualCartDetailsString, expectedCartDetailsString);
 
         }
 
+        @DataProvider(name = "getProductName")
+        public Object[][] getProductName() {
+            return new Object[][]
+                    {
+                            {"Ruby on Rails Bag", "2"},
+                            {"Ruby on Rails Tote", "2"}
+                    };
+
+        }
     }
