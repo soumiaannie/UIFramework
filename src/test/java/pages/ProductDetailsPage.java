@@ -2,26 +2,36 @@ package pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.PageFactory;
 
-public class ProductDetailsPage {
+public class ProductDetailsPage  {
 
-    ChromeDriver driver;
-    public ProductDetailsPage(ChromeDriver driver) {
+    WebDriver driver;
+
+    @FindBy(id="add-to-cart-button")
+    private WebElement add_To_Cart_Button;
+
+    @FindBy(id="quantity")
+    private WebElement quantityBox;
+
+    public ProductDetailsPage(WebDriver driver) {
         this.driver=driver;
+        PageFactory.initElements(driver, this);
     }
 
 
     public ShoppingCartPage addToCart() {
 
-        driver.findElement(By.id("add-to-cart-button")).click();
+        add_To_Cart_Button.click();
         return new ShoppingCartPage(driver);
     }
 
     public void selectQuantity(String productQuantity)
     {
-        driver.findElement(By.id("quantity")).clear();
-        driver.findElement(By.id("quantity")).sendKeys(productQuantity);
-        //return new ProductDetailsPage(driver);
+        quantityBox.clear();
+        quantityBox.sendKeys(productQuantity);
     }
 }

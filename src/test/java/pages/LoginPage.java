@@ -7,9 +7,15 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+
 public class LoginPage  {
 
-    ChromeDriver driver;
+    WebDriver driver;
+    Properties properties;
 
     @FindBy(id="link-to-login")
     private WebElement login_link;
@@ -28,22 +34,38 @@ public class LoginPage  {
 
 
 
-    public LoginPage(ChromeDriver driver) {
+    public LoginPage(WebDriver driver, Properties properties) {
         this.driver=driver;
+        this.properties=properties;
         PageFactory.initElements(driver, this);
     }
 
+
     public ProductListingPage login(String userName, String passWord) {
-        driver.navigate().to("https://spree-vapasi.herokuapp.com/");
-        //login_link.click();
-        //email.sendKeys(userName);
-        //password.sendKeys(passWord);
-        //login.click();
+
+        String url=properties.getProperty("url");
+        driver.navigate().to(url);
+        login_link.click();
+        email.sendKeys(userName);
+        password.sendKeys(passWord);
+        login.click();
         return new ProductListingPage(driver);
     }
 
+
     public boolean isMy_account() {
+
         return my_account_link.isDisplayed();
+    }
+
+    //This method navigates to url without logging in
+    //This will be used by later testcases for assertions as assertions would fail if we login
+    //and then try to do it. This is because many users login at the same time using same credentials.
+    public ProductListingPage navigateToURL()
+    {
+        String url=properties.getProperty("url");
+        driver.navigate().to(url);
+        return new ProductListingPage(driver);
     }
 
 }

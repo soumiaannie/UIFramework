@@ -2,6 +2,10 @@
 
 <suite name="smokesuite" verbose="10" parallel="classes">
     <parameter name="url" value="https://spree-vapasi.herokuapp.com;" ></parameter>
+    <listeners>
+        <listener class-name="tests.utilities.TestNGCustomReportClass"/>
+    </listeners>
+
     <test name="smoke">
         <groups>
         <run>

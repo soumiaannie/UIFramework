@@ -1,8 +1,12 @@
 package pages;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.FindBys;
+import org.openqa.selenium.support.PageFactory;
 import tests.utilities.CartDetails;
 
 import java.util.ArrayList;
@@ -10,24 +14,33 @@ import java.util.List;
 
 
 
-public class ShoppingCartPage {
+public class ShoppingCartPage  {
 
-    ChromeDriver driver;
+    WebDriver driver;
+
+    @FindBy(id="cart-detail")
+    private WebElement cartDetail;
+
+    //@FindBys(@FindBy(id="cart-detail"),@FindBy(className = "line-item"))
+    //private WebElement getCartElements;
+
+
     ArrayList<CartDetails> cartDetails = new ArrayList<CartDetails>();
 
-    public ShoppingCartPage(ChromeDriver driver)
+    public ShoppingCartPage(WebDriver driver)
     {
      this.driver=driver;
+        PageFactory.initElements(driver, this);
     }
 
 
     public List<WebElement> getCartElements() {
-        return driver.findElement(By.id("cart-detail")).findElements(By.className("line-item"));
+        return cartDetail.findElements(By.className("line-item"));
     }
 
 
     public String getActualProductNameDisplayedInCart() {
-        return driver.findElement(By.id("cart-detail")).findElement(By.linkText("Ruby on Rails Bag")).getText();
+        return cartDetail.findElement(By.linkText("Ruby on Rails Bag")).getText();
     }
 
     public ArrayList<CartDetails> displayCartItems(List<WebElement> items) {

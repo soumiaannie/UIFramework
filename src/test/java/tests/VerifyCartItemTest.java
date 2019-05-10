@@ -17,33 +17,29 @@ import static org.testng.Assert.assertEquals;
 
     public class VerifyCartItemTest extends BaseClass {
 
-        //@Test(groups="smoke")
+
         @Test(dataProvider = "getProductName", groups = "smoke")
-        @Parameters("url")
         public void verifyCartItemTest(String productName, String productQuantity) {
 
+            //Creating the expected cartdetails list using dataprovider
             ArrayList<CartDetails> expectedCartDetails = new ArrayList<CartDetails>();
             expectedCartDetails.add(0, new CartDetails(productName, productQuantity));
 
-            LoginPage loginPage = new LoginPage(driver);
-
-            //String productQuantity = "2";
-
-            ProductListingPage productListing = loginPage.login("spree@example.com", "spree123");
-
+            //Logging in and adding item to cart by reading from dataprovider
+            LoginPage loginPage = new LoginPage(driver, properties);
+            ProductListingPage productListing = loginPage.navigateToURL();
             ProductDetailsPage productDetails = productListing.selectProduct(productName);
             productDetails.selectQuantity(productQuantity);
             ShoppingCartPage shoppingCart = productDetails.addToCart();
 
+            //asserting the actual list count is as expected
             List<WebElement> items = shoppingCart.getCartElements();
-
             assertEquals(items.size(), 1);
 
-            //Printing out the product names from the cart
+            //Printing out the product names from the cart and asserting the expected and actual lists
             ArrayList<CartDetails> actualCartDetails = shoppingCart.displayCartItems(items);
             String actualCartDetailsString = new Gson().toJson(actualCartDetails);
             String expectedCartDetailsString = new Gson().toJson(expectedCartDetails);
-            //assertEquals(actualCartDetailsString,expectedCartDetailsString);
             assertEquals(actualCartDetailsString, expectedCartDetailsString);
 
         }
